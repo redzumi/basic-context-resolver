@@ -23,8 +23,8 @@
   ],
   "scripts": {
     "build": "tsup",
-    "dev": "dotenv -e .env -- tsup --watch --onSuccess 'node dist/index.cjs'",
-    "start": "dotenv -e .env -- node dist/index.cjs",
+    "dev": "dotenv -e .env -- tsup --watch --onSuccess 'node dist/cli.cjs'",
+    "start": "dotenv -e .env -- node dist/cli.cjs",
     "prepublishOnly": "tsup"
   },
   "license": "MIT",
@@ -49,9 +49,5 @@
     "macos",
     "windows",
     "linux"
-  ],
-  "repository": {
-    "type": "git",
-    "url": ""
-  }
+  ]
 }

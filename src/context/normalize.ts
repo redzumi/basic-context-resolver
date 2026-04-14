@@ -1,4 +1,4 @@
-import type { PlatformBackendResult, UniversalContext, FullDebugSnapshot, DebugLayer, Platform } from './types';
+import type { PlatformBackendResult, UniversalContext, FullDebugSnapshot, DebugLayer, Platform, FinalContext } from './types';
 
 function buildDebugLayer(
   provider: string,
@@ -17,31 +17,12 @@ export function normalizePlatformResult(
   backendName: string,
   metrics: Record<string, number>,
 ): UniversalContext {
-  const hasWindowMetadata = !!(result.app.name || result.app.title);
-  const hasBrowserContext = !!(result.browser?.url || result.browser?.title);
-  const hasNativeUiContext = !!(
-    result.ui?.focusedRole ||
-    result.ui?.focusedName ||
-    result.ui?.selectedText
-  );
-
-  const final = {
-    mode: 'generic_text' as const,
-    appName: result.app.name,
-    activeTitle: result.app.title,
-    url: result.browser?.url,
-    domain: result.browser?.domain,
-    selectedText: result.ui?.selectedText,
-    inputValuePreview: result.ui?.focusedValue,
-  };
-
   return {
     platform,
     timestamp: new Date().toISOString(),
     app: result.app,
     browser: result.browser,
     ui: result.ui,
-    final,
     debug: result.debug,
   };
 }
@@ -51,6 +32,7 @@ export function buildFullDebugSnapshot(
   platform: Platform,
   backendName: string,
   metrics: Record<string, number>,
+  final: FinalContext,
 ): FullDebugSnapshot {
   const hasWindowMetadata = !!(result.app.name || result.app.title);
   const hasBrowserContext = !!(result.browser?.url || result.browser?.title);
@@ -90,15 +72,7 @@ export function buildFullDebugSnapshot(
       result.debug.uiRaw,
       result.ui ?? null,
     ),
-    final: {
-      mode: 'generic_text' as const,
-      appName: result.app.name,
-      activeTitle: result.app.title,
-      url: result.browser?.url,
-      domain: result.browser?.domain,
-      selectedText: result.ui?.selectedText,
-      inputValuePreview: result.ui?.focusedValue,
-    },
+    final,
     metrics,
     backendName,
   };

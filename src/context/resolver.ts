@@ -1,4 +1,4 @@
-import type { UniversalContext, FullDebugSnapshot, PlatformBackend } from './types';
+import type { UniversalContext, FullDebugSnapshot, PlatformBackend, Platform, FinalContext } from './types';
 import { detectPlatform } from '../adapters/getWindows';
 import { MacOSBackend } from '../adapters/macos/backend';
 import { WindowsBackend } from '../adapters/windows/backend';
@@ -13,14 +13,10 @@ const BACKENDS: Record<string, () => PlatformBackend> = {
   linux: () => new LinuxBackend(),
 };
 
-export interface ResolveOptions {
-  debug?: boolean;
-}
-
 export class ContextResolver {
   private readonly metrics: Metrics;
 
-  constructor(options?: ResolveOptions) {
+  constructor() {
     this.metrics = new Metrics();
   }
 
@@ -41,9 +37,7 @@ export class ContextResolver {
     this.metrics.mark('backend_end');
     this.metrics.measure('backendCollectMs', 'backend_start', 'backend_end');
 
-    const normalized = normalizePlatformResult(result, platform, backend.name, this.metrics.toJSON().steps);
-
-    normalized.final = buildFinalContext({
+    const final = buildFinalContext({
       appName: result.app.name,
       title: result.app.title,
       url: result.browser?.url,
@@ -55,7 +49,15 @@ export class ContextResolver {
     this.metrics.mark('resolve_end');
     this.metrics.measure('totalResolveMs', 'resolve_start', 'resolve_end');
 
-    return normalized;
+    return {
+      platform,
+      timestamp: new Date().toISOString(),
+      app: result.app,
+      browser: result.browser,
+      ui: result.ui,
+      final,
+      debug: result.debug,
+    };
   }
 
   async resolveWithDebug(): Promise<{ context: UniversalContext; debug: FullDebugSnapshot }> {
@@ -68,7 +70,7 @@ export class ContextResolver {
       const ctx = this.emptyResult(platform, `Unsupported platform: ${platform}`);
       return {
         context: ctx,
-        debug: buildFullDebugSnapshot({ app: {}, debug: {} }, platform, 'none', {}),
+        debug: buildFullDebugSnapshot({ app: {}, debug: {} }, platform, 'none', {}, ctx.final),
       };
     }
 
@@ -79,7 +81,7 @@ export class ContextResolver {
     this.metrics.mark('backend_end');
     this.metrics.measure('backendCollectMs', 'backend_start', 'backend_end');
 
-    const finalCtx = buildFinalContext({
+    const final = buildFinalContext({
       appName: result.app.name,
       title: result.app.title,
       url: result.browser?.url,
@@ -94,20 +96,19 @@ export class ContextResolver {
       app: result.app,
       browser: result.browser,
       ui: result.ui,
-      final: finalCtx,
+      final,
       debug: result.debug,
     };
 
     this.metrics.mark('resolve_end');
     this.metrics.measure('totalResolveMs', 'resolve_start', 'resolve_end');
 
-    const fullDebug = buildFullDebugSnapshot(result, platform, backend.name, this.metrics.toJSON().steps);
-    fullDebug.final = finalCtx;
+    const fullDebug = buildFullDebugSnapshot(result, platform, backend.name, this.metrics.toJSON().steps, final);
 
     return { context, debug: fullDebug };
   }
 
-  private emptyResult(platform: import('./types').Platform, note: string): UniversalContext {
+  private emptyResult(platform: Platform, note: string): UniversalContext {
     return {
       platform,
       timestamp: new Date().toISOString(),

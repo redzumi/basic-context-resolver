@@ -1,20 +1,11 @@
-export function nowMs(): number {
+function nowMs(): number {
   return Number(process.hrtime.bigint()) / 1e6;
-}
-
-export function sleep(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-export function formatMs(ms: number): string {
-  return `${ms.toFixed(1)}ms`;
 }
 
 export class Metrics {
   private readonly startedAt = nowMs();
   private readonly marks = new Map<string, number>();
   private readonly steps = new Map<string, number>();
-  private totalMs = 0;
 
   mark(name: string): void {
     this.marks.set(name, nowMs());
@@ -31,17 +22,11 @@ export class Metrics {
     this.steps.set(name, end - start);
   }
 
-  set(name: string, valueMs: number): void {
-    this.steps.set(name, valueMs);
-  }
-
-  finish(): void {
-    this.totalMs = nowMs() - this.startedAt;
-  }
-
   toJSON(): { totalMs: number; steps: Record<string, number> } {
+    const totalMs = Number((nowMs() - this.startedAt).toFixed(1));
+
     return {
-      totalMs: Number(this.totalMs.toFixed(1)),
+      totalMs,
       steps: Object.fromEntries(
         [...this.steps.entries()].map(([k, v]) => [k, Number(v.toFixed(1))]),
       ),

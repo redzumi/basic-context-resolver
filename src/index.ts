@@ -14,8 +14,6 @@ export type {
   FullDebugSnapshot,
 } from './context/types';
 
-export type { ResolveOptions } from './context/resolver';
-
 export {
   isBrowserApp,
   isChatApp,
@@ -26,8 +24,6 @@ export {
 
 export { inferMode, buildFinalContext } from './context/inferMode';
 
-export { normalizePlatformResult, buildFullDebugSnapshot } from './context/normalize';
-
 export { ContextResolver } from './context/resolver';
 
 export { MacOSBackend } from './adapters/macos/backend';
@@ -35,5 +31,3 @@ export { WindowsBackend } from './adapters/windows/backend';
 export { LinuxBackend } from './adapters/linux/backend';
 
 export { getWindowMetadata, detectPlatform } from './adapters/getWindows';
-
-export { Metrics, sleep } from './utils/metrics';
