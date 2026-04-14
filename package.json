@@ -49,5 +49,10 @@
     "macos",
     "windows",
     "linux"
-  ]
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/redzumi/basic-context-resolver"
+  },
+  "homepage": "https://github.com/redzumi/basic-context-resolver#readme"
 }
