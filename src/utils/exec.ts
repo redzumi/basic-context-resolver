@@ -11,6 +11,7 @@ export async function execText(
   const { stdout } = await execFileAsync(command, args, {
     timeout: 5000,
     maxBuffer: 1024 * 1024,
+    encoding: 'utf8' as BufferEncoding,
     ...options,
   });
 

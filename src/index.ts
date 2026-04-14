@@ -1,8 +1,5 @@
 import process from 'node:process';
-import { NativeMessagingBrowserProvider } from './providers/browser/nativeMessagingBrowserProvider';
-import { MacOSBrowserProvider } from './providers/browser/macosBrowserProvider';
-import { GetWindowsProvider } from './providers/window/getWindowsProvider';
-import { ContextResolver } from './resolver/contextResolver';
+import { ContextResolver } from './context/resolver';
 import { Metrics, sleep } from './utils/metrics';
 
 async function main(): Promise<void> {
@@ -17,24 +14,16 @@ async function main(): Promise<void> {
     metrics.measure('waitBeforeResolveMs', 'wait_start', 'wait_end');
   }
 
-  const resolver = new ContextResolver({
-    windowProvider: new GetWindowsProvider(),
-    browserProviders: [
-      new NativeMessagingBrowserProvider(),
-      new MacOSBrowserProvider(),
-    ],
-    metrics,
-  });
+  const resolver = new ContextResolver();
 
-  const result = await resolver.resolve();
+  const result = await resolver.resolveWithDebug();
   metrics.finish();
 
   console.log(
     JSON.stringify(
       {
-        activeWindow: result.activeWindow,
-        browserContext: result.browserContext,
-        final: result.final,
+        context: result.context,
+        debug: result.debug,
         metrics: metrics.toJSON(),
       },
       null,
