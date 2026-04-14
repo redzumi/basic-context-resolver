@@ -19,7 +19,14 @@
     }
   },
   "files": [
-    "dist"
+    "dist/index.cjs",
+    "dist/index.js",
+    "dist/index.cjs.map",
+    "dist/index.js.map",
+    "dist/index.d.ts",
+    "dist/index.d.cts",
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
     "build": "tsup",
