@@ -16,28 +16,6 @@ interface UiaCandidate {
   textPattern?: string;
 }
 
-function looksLikeUrl(s: string): boolean {
-  if (!s) return false;
-  const t = s.trim();
-  if (t.startsWith('http://') || t.startsWith('https://')) return true;
-  if (/^[a-zA-Z0-9]([a-zA-Z0-9-]*\.)+[a-zA-Z]{2,}/.test(t)) return true;
-  return false;
-}
-
-function pickBestUrl(candidates: UiaCandidate[]): string | null {
-  for (const c of candidates) {
-    if (c.valuePattern && looksLikeUrl(c.valuePattern)) return c.valuePattern;
-    if (c.legacyIa && looksLikeUrl(c.legacyIa)) return c.legacyIa;
-    if (c.textPattern && looksLikeUrl(c.textPattern)) return c.textPattern;
-  }
-  for (const c of candidates) {
-    if (c.valuePattern) return c.valuePattern;
-    if (c.legacyIa) return c.legacyIa;
-    if (c.textPattern) return c.textPattern;
-  }
-  return null;
-}
-
 async function extractBrowserViaUIA(processId?: number): Promise<{ browser: BrowserInfo; raw: unknown } | null> {
   try {
     const script = PS_UTF8_HEADER + `
@@ -465,8 +443,7 @@ try {
         raw = output;
       }
     }
-  } catch {
-  }
+  } catch { /* ignore */ }
 
   return { ui, raw };
 }
@@ -481,9 +458,7 @@ export class WindowsBackend implements PlatformBackend {
 
     const notes: string[] = [];
     let browser: BrowserInfo | undefined;
-    let ui: UiContext | undefined;
     let browserRaw: unknown;
-    let uiRaw: unknown;
 
     const appName = app.name ?? '';
 
@@ -526,8 +501,8 @@ export class WindowsBackend implements PlatformBackend {
     }
 
     const uiaResult = await extractUIAContext();
-    ui = uiaResult.ui;
-    uiRaw = uiaResult.raw;
+    const ui = uiaResult.ui;
+    const uiRaw = uiaResult.raw;
 
     return {
       app,

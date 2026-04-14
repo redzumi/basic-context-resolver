@@ -1,5 +1,5 @@
 import { activeWindow } from 'get-windows';
-import type { AppInfo, DebugSnapshot, Platform } from '../context/types';
+import type { AppInfo, Platform } from '../context/types';
 
 export interface WindowAdapterResult {
   app: AppInfo;

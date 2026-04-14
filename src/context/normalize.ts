@@ -1,4 +1,5 @@
 import type { PlatformBackendResult, UniversalContext, FullDebugSnapshot, DebugLayer, Platform, FinalContext } from './types';
+import { buildFinalContext } from './inferMode';
 
 function buildDebugLayer(
   provider: string,
@@ -14,15 +15,25 @@ function buildDebugLayer(
 export function normalizePlatformResult(
   result: PlatformBackendResult,
   platform: Platform,
-  backendName: string,
-  metrics: Record<string, number>,
+  _backendName: string,
+  _metrics: Record<string, number>,
 ): UniversalContext {
+  const final = buildFinalContext({
+    appName: result.app.name,
+    title: result.app.title,
+    url: result.browser?.url,
+    domain: result.browser?.domain,
+    selectedText: result.ui?.selectedText,
+    inputValuePreview: result.ui?.focusedValue,
+  });
+
   return {
     platform,
     timestamp: new Date().toISOString(),
     app: result.app,
     browser: result.browser,
     ui: result.ui,
+    final,
     debug: result.debug,
   };
 }

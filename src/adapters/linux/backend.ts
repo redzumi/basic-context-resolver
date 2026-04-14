@@ -3,7 +3,6 @@ import type { PlatformBackend, PlatformBackendResult, UiContext } from '../../co
 
 async function extractX11Context(): Promise<{ ui: UiContext; raw: unknown }> {
   const ui: UiContext = {};
-  let raw: unknown = undefined;
   const notes: string[] = [];
 
   try {
@@ -46,7 +45,7 @@ async function extractX11Context(): Promise<{ ui: UiContext; raw: unknown }> {
     notes.push('xdotool getwindowpid failed');
   }
 
-  raw = { ...ui, _notes: notes };
+  const raw = { ...ui, _notes: notes };
 
   return { ui, raw };
 }
@@ -60,15 +59,11 @@ export class LinuxBackend implements PlatformBackend {
     const { app, raw: windowRaw } = await getWindowMetadata();
 
     const notes: string[] = [];
-    let ui: UiContext | undefined;
-    let uiRaw: unknown;
 
     const desktopEnv = process.env.XDG_CURRENT_DESKTOP ?? process.env.DESKTOP_SESSION ?? 'unknown';
     notes.push(`desktop environment: ${desktopEnv}`);
 
-    const x11Result = await extractX11Context();
-    ui = x11Result.ui;
-    uiRaw = x11Result.raw;
+    const { ui, raw: uiRaw } = await extractX11Context();
 
     if (Object.keys(ui).length === 0) {
       notes.push('Linux context extraction returned minimal data - AT-SPI/WMI tools may be unavailable');

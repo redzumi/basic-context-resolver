@@ -1,10 +1,10 @@
-import type { UniversalContext, FullDebugSnapshot, PlatformBackend, Platform, FinalContext } from './types';
+import type { UniversalContext, FullDebugSnapshot, PlatformBackend, Platform } from './types';
 import { detectPlatform } from '../adapters/getWindows';
 import { MacOSBackend } from '../adapters/macos/backend';
 import { WindowsBackend } from '../adapters/windows/backend';
 import { LinuxBackend } from '../adapters/linux/backend';
-import { normalizePlatformResult, buildFullDebugSnapshot } from './normalize';
-import { inferMode, buildFinalContext } from './inferMode';
+import { buildFullDebugSnapshot } from './normalize';
+import { buildFinalContext } from './inferMode';
 import { Metrics } from '../utils/metrics';
 
 const BACKENDS: Record<string, () => PlatformBackend> = {

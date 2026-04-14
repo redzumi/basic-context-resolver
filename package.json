@@ -30,8 +30,10 @@
   ],
   "scripts": {
     "build": "tsup",
+    "lint": "eslint src",
     "dev": "dotenv -e .env -- tsup --watch --onSuccess 'node dist/cli.cjs'",
     "start": "dotenv -e .env -- node dist/cli.cjs",
+    "release": "release-it",
     "prepublishOnly": "tsup"
   },
   "license": "MIT",
@@ -39,10 +41,14 @@
     "get-windows": "^9.3.0"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@types/node": "^24.10.1",
     "dotenv-cli": "^11.0.0",
+    "eslint": "^10.2.0",
+    "release-it": "^19.2.4",
     "tsup": "^8.5.1",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "typescript-eslint": "^8.58.2"
   },
   "engines": {
     "node": ">=18"

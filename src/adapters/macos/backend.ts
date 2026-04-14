@@ -61,7 +61,7 @@ async function extractBrowserViaAppleScript(appName: string): Promise<BrowserInf
 
 async function extractAXContext(): Promise<{ ui: UiContext; raw: unknown }> {
   const ui: UiContext = {};
-  let raw: unknown = undefined;
+  let raw: unknown;
   const notes: string[] = [];
 
   try {
@@ -146,9 +146,7 @@ export class MacOSBackend implements PlatformBackend {
 
     const notes: string[] = [];
     let browser: BrowserInfo | undefined;
-    let ui: UiContext | undefined;
     let browserRaw: unknown;
-    let uiRaw: unknown;
 
     const appName = app.name ?? '';
 
@@ -169,9 +167,7 @@ export class MacOSBackend implements PlatformBackend {
       }
     }
 
-    const axResult = await extractAXContext();
-    ui = axResult.ui;
-    uiRaw = axResult.raw;
+    const { ui, raw: uiRaw } = await extractAXContext();
 
     if (Object.keys(ui).length === 0) {
       notes.push('AX context extraction returned empty');

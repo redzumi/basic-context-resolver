@@ -1,5 +1,9 @@
 # basic-context-resolver
 
+[![npm version](https://img.shields.io/npm/v/basic-context-resolver)](https://www.npmjs.com/package/basic-context-resolver)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Node.js](https://img.shields.io/badge/node-%3E%3D18-green.svg)](https://nodejs.org)
+
 Cross-platform desktop context resolver. Detects the active application, browser URL, and UI state on macOS, Windows, and Linux.
 
 ## Install
