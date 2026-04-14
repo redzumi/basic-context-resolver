@@ -1,6 +1,6 @@
 import { execText } from '../../utils/exec';
 import { safeDomain, isBrowserApp } from '../../context/helpers';
-import type { PlatformBackend, PlatformBackendResult, BrowserInfo, UiContext } from '../context/types';
+import type { PlatformBackend, PlatformBackendResult, BrowserInfo, UiContext } from '../../context/types';
 
 const PS_UTF8_HEADER = `
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8

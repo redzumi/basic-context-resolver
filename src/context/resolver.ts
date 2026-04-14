@@ -107,7 +107,7 @@ export class ContextResolver {
     return { context, debug: fullDebug };
   }
 
-  private emptyResult(platform: Platform, note: string): UniversalContext {
+  private emptyResult(platform: import('./types').Platform, note: string): UniversalContext {
     return {
       platform,
       timestamp: new Date().toISOString(),

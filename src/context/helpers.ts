@@ -56,6 +56,8 @@ export function safeDomain(url: string): string {
   }
 }
 
+import type { DebugSnapshot } from './types';
+
 export function collectDebugSnapshot(
   windowRaw: unknown,
   browserRaw: unknown,

@@ -1,5 +1,5 @@
 import { execText } from '../../utils/exec';
-import type { PlatformBackend, PlatformBackendResult, UiContext } from '../context/types';
+import type { PlatformBackend, PlatformBackendResult, UiContext } from '../../context/types';
 
 async function extractX11Context(): Promise<{ ui: UiContext; raw: unknown }> {
   const ui: UiContext = {};

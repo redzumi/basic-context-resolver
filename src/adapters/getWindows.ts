@@ -33,7 +33,7 @@ export async function getWindowMetadata(): Promise<WindowAdapterResult> {
           }
         : undefined,
       processPath: result.owner?.path ?? undefined,
-      bundleId: result.owner?.bundleId ?? undefined,
+      bundleId: 'bundleId' in (result.owner ?? {}) ? (result.owner as { bundleId?: string }).bundleId ?? undefined : undefined,
     };
 
     return { app, raw: result };

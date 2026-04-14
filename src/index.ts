@@ -1,39 +1,39 @@
-import process from 'node:process';
-import { ContextResolver } from './context/resolver';
-import { Metrics, sleep } from './utils/metrics';
+export type {
+  Platform,
+  ContextMode,
+  ConversationType,
+  AppInfo,
+  BrowserInfo,
+  UiContext,
+  FinalContext,
+  DebugSnapshot,
+  UniversalContext,
+  PlatformBackendResult,
+  PlatformBackend,
+  DebugLayer,
+  FullDebugSnapshot,
+} from './context/types';
 
-async function main(): Promise<void> {
-  const metrics = new Metrics();
-  const waitMs = Number(process.env.WAIT_MS || 0);
+export type { ResolveOptions } from './context/resolver';
 
-  if (waitMs > 0) {
-    console.log(`Waiting ${waitMs}ms before resolving context...`);
-    metrics.mark('wait_start');
-    await sleep(waitMs);
-    metrics.mark('wait_end');
-    metrics.measure('waitBeforeResolveMs', 'wait_start', 'wait_end');
-  }
+export {
+  isBrowserApp,
+  isChatApp,
+  isBrowserChatDomain,
+  safeDomain,
+  collectDebugSnapshot,
+} from './context/helpers';
 
-  const resolver = new ContextResolver();
+export { inferMode, buildFinalContext } from './context/inferMode';
 
-  const result = await resolver.resolveWithDebug();
-  metrics.finish();
+export { normalizePlatformResult, buildFullDebugSnapshot } from './context/normalize';
 
-  console.log(
-    JSON.stringify(
-      {
-        context: result.context,
-        debug: result.debug,
-        metrics: metrics.toJSON(),
-      },
-      null,
-      2,
-    ),
-  );
-}
+export { ContextResolver } from './context/resolver';
 
-main().catch((error: unknown) => {
-  console.error('Fatal error:');
-  console.error(error);
-  process.exit(1);
-});
+export { MacOSBackend } from './adapters/macos/backend';
+export { WindowsBackend } from './adapters/windows/backend';
+export { LinuxBackend } from './adapters/linux/backend';
+
+export { getWindowMetadata, detectPlatform } from './adapters/getWindows';
+
+export { Metrics, sleep } from './utils/metrics';
