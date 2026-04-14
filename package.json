@@ -31,6 +31,8 @@
   "scripts": {
     "build": "tsup",
     "lint": "eslint src",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "dev": "dotenv -e .env -- tsup --watch --onSuccess 'node dist/cli.cjs'",
     "start": "dotenv -e .env -- node dist/cli.cjs",
     "release": "release-it",
@@ -48,7 +50,8 @@
     "release-it": "^19.2.4",
     "tsup": "^8.5.1",
     "typescript": "^5.8.2",
-    "typescript-eslint": "^8.58.2"
+    "typescript-eslint": "^8.58.2",
+    "vitest": "^4.1.4"
   },
   "engines": {
     "node": ">=18"

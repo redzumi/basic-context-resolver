@@ -7,7 +7,7 @@ import { buildFullDebugSnapshot } from './normalize';
 import { buildFinalContext } from './inferMode';
 import { Metrics } from '../utils/metrics';
 
-const BACKENDS: Record<string, () => PlatformBackend> = {
+export const BACKENDS: Record<string, () => PlatformBackend> = {
   darwin: () => new MacOSBackend(),
   win32: () => new WindowsBackend(),
   linux: () => new LinuxBackend(),
