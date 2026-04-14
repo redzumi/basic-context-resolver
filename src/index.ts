@@ -10,6 +10,7 @@ export type {
   UniversalContext,
   PlatformBackendResult,
   PlatformBackend,
+  PlatformBackendOptions,
   DebugLayer,
   FullDebugSnapshot,
 } from './context/types';
@@ -30,4 +31,4 @@ export { MacOSBackend } from './adapters/macos/backend';
 export { WindowsBackend } from './adapters/windows/backend';
 export { LinuxBackend } from './adapters/linux/backend';
 
-export { getWindowMetadata, detectPlatform } from './adapters/getWindows';
+export { getWindowMetadata, detectPlatform, type GetWindowsOptions } from './adapters/getWindows';

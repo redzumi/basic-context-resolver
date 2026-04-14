@@ -54,9 +54,9 @@ export class LinuxBackend implements PlatformBackend {
   readonly name = 'linux-shell-atspi';
   readonly platform = 'linux' as const;
 
-  async collect(): Promise<PlatformBackendResult> {
+  async collect(options?: import('../../context/types').PlatformBackendOptions): Promise<PlatformBackendResult> {
     const { getWindowMetadata } = await import('../getWindows');
-    const { app, raw: windowRaw } = await getWindowMetadata();
+    const { app, raw: windowRaw } = await getWindowMetadata(options?.getWindowsOptions);
 
     const notes: string[] = [];
 

@@ -1,17 +1,21 @@
-import { activeWindow } from 'get-windows';
+import { activeWindow, type Options } from 'get-windows';
 import type { AppInfo, Platform } from '../context/types';
+
+export type GetWindowsOptions = Options;
+
+const DEFAULT_OPTIONS: Options = {
+  accessibilityPermission: false,
+  screenRecordingPermission: true,
+};
 
 export interface WindowAdapterResult {
   app: AppInfo;
   raw: unknown;
 }
 
-export async function getWindowMetadata(): Promise<WindowAdapterResult> {
+export async function getWindowMetadata(options?: GetWindowsOptions): Promise<WindowAdapterResult> {
   try {
-    const result = await activeWindow({
-      accessibilityPermission: false,
-      screenRecordingPermission: true,
-    });
+    const result = await activeWindow({ ...DEFAULT_OPTIONS, ...options });
 
     if (!result) {
       return {

@@ -140,9 +140,9 @@ export class MacOSBackend implements PlatformBackend {
   readonly name = 'macos-applescript-ax';
   readonly platform = 'darwin' as const;
 
-  async collect(): Promise<PlatformBackendResult> {
+  async collect(options?: import('../../context/types').PlatformBackendOptions): Promise<PlatformBackendResult> {
     const { getWindowMetadata } = await import('../getWindows');
-    const { app, raw: windowRaw } = await getWindowMetadata();
+    const { app, raw: windowRaw } = await getWindowMetadata(options?.getWindowsOptions);
 
     const notes: string[] = [];
     let browser: BrowserInfo | undefined;

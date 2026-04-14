@@ -79,7 +79,11 @@ export interface PlatformBackendResult {
 export interface PlatformBackend {
   readonly name: string;
   readonly platform: Platform;
-  collect(): Promise<PlatformBackendResult>;
+  collect(options?: PlatformBackendOptions): Promise<PlatformBackendResult>;
+}
+
+export interface PlatformBackendOptions {
+  getWindowsOptions?: import('../adapters/getWindows').GetWindowsOptions;
 }
 
 export interface DebugLayer {

@@ -452,9 +452,9 @@ export class WindowsBackend implements PlatformBackend {
   readonly name = 'windows-powershell-uia';
   readonly platform = 'win32' as const;
 
-  async collect(): Promise<PlatformBackendResult> {
+  async collect(options?: import('../../context/types').PlatformBackendOptions): Promise<PlatformBackendResult> {
     const { getWindowMetadata } = await import('../getWindows');
-    const { app, raw: windowRaw } = await getWindowMetadata();
+    const { app, raw: windowRaw } = await getWindowMetadata(options?.getWindowsOptions);
 
     const notes: string[] = [];
     let browser: BrowserInfo | undefined;

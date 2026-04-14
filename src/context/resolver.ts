@@ -1,4 +1,4 @@
-import type { UniversalContext, FullDebugSnapshot, PlatformBackend, Platform } from './types';
+import type { UniversalContext, FullDebugSnapshot, PlatformBackend, Platform, PlatformBackendOptions } from './types';
 import { detectPlatform } from '../adapters/getWindows';
 import { MacOSBackend } from '../adapters/macos/backend';
 import { WindowsBackend } from '../adapters/windows/backend';
@@ -15,9 +15,11 @@ const BACKENDS: Record<string, () => PlatformBackend> = {
 
 export class ContextResolver {
   private readonly metrics: Metrics;
+  private readonly options: PlatformBackendOptions;
 
-  constructor() {
+  constructor(options?: PlatformBackendOptions) {
     this.metrics = new Metrics();
+    this.options = options ?? {};
   }
 
   async resolve(): Promise<UniversalContext> {
@@ -33,7 +35,7 @@ export class ContextResolver {
     const backend = BackendFactory();
 
     this.metrics.mark('backend_start');
-    const result = await backend.collect();
+    const result = await backend.collect(this.options);
     this.metrics.mark('backend_end');
     this.metrics.measure('backendCollectMs', 'backend_start', 'backend_end');
 
@@ -77,7 +79,7 @@ export class ContextResolver {
     const backend = BackendFactory();
 
     this.metrics.mark('backend_start');
-    const result = await backend.collect();
+    const result = await backend.collect(this.options);
     this.metrics.mark('backend_end');
     this.metrics.measure('backendCollectMs', 'backend_start', 'backend_end');
 
