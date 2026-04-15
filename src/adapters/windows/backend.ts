@@ -135,9 +135,13 @@ try {
     $ctrlLSent = $false
     $candidatesAfter = @()
     $urlAfter = $null
+    $probeFocusRestored = $false
+    $focusedBefore = $null
 
     if (-not $urlBefore -and $omniboxElements.Count -gt 0) {
         $probeAttempted = $true
+
+        try { $focusedBefore = [System.Windows.Automation.AutomationElement]::FocusedElement } catch {}
         $target = $omniboxElements[0]
 
         try {
@@ -162,6 +166,13 @@ try {
             if ($c.valuePattern -match '^https?://|^[\w][\w.-]*\.[a-z]{2,}') { $urlAfter = $c.valuePattern; break }
             if ($c.legacyIa -match '^https?://|^[\w][\w.-]*\.[a-z]{2,}') { $urlAfter = $c.legacyIa; break }
             if ($c.textPattern -match '^https?://|^[\w][\w.-]*\.[a-z]{2,}') { $urlAfter = $c.textPattern; break }
+        }
+
+        if ($focusedBefore -ne $null) {
+            try {
+                $focusedBefore.SetFocus() | Out-Null
+                $probeFocusRestored = $true
+            } catch {}
         }
     }
 
@@ -256,6 +267,7 @@ try {
             attempted = $probeAttempted
             focusSucceeded = $focusSucceeded
             ctrlLSent = $ctrlLSent
+            focusRestored = $probeFocusRestored
         }
         urlBefore = $urlBefore
         urlAfter = $urlAfter
