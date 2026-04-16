@@ -1,6 +1,6 @@
 {
   "name": "basic-context-resolver",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Cross-platform desktop context resolver — detects active app, browser URL, UI state (macOS, Windows, Linux)",
   "type": "module",
   "main": "./dist/index.cjs",
