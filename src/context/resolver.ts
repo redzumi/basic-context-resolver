@@ -1,16 +1,13 @@
 import type { UniversalContext, FullDebugSnapshot, PlatformBackend, Platform, PlatformBackendOptions } from './types';
 import { detectPlatform } from '../adapters/getWindows';
-import { MacOSBackend } from '../adapters/macos/backend';
-import { WindowsBackend } from '../adapters/windows/backend';
-import { LinuxBackend } from '../adapters/linux/backend';
 import { buildFullDebugSnapshot } from './normalize';
 import { buildFinalContext } from './inferMode';
 import { Metrics } from '../utils/metrics';
 
-export const BACKENDS: Record<string, () => PlatformBackend> = {
-  darwin: () => new MacOSBackend(),
-  win32: () => new WindowsBackend(),
-  linux: () => new LinuxBackend(),
+export const BACKENDS: Record<string, () => PlatformBackend | Promise<PlatformBackend>> = {
+  darwin: () => import('../adapters/macos/backend').then(m => new m.MacOSBackend()),
+  win32: () => import('../adapters/windows/backend').then(m => new m.WindowsBackend()),
+  linux: () => import('../adapters/linux/backend').then(m => new m.LinuxBackend()),
 };
 
 export class ContextResolver {
@@ -32,7 +29,7 @@ export class ContextResolver {
       return this.emptyResult(platform, `Unsupported platform: ${platform}`);
     }
 
-    const backend = BackendFactory();
+    const backend = await BackendFactory();
 
     this.metrics.mark('backend_start');
     const result = await backend.collect(this.options);
@@ -76,7 +73,7 @@ export class ContextResolver {
       };
     }
 
-    const backend = BackendFactory();
+    const backend = await BackendFactory();
 
     this.metrics.mark('backend_start');
     const result = await backend.collect(this.options);
